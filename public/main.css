@@ -1,0 +1,95 @@
+/* body */
+:root {
+    --backgroundColor: #faf2ea;
+    --colorOne: #B4846C;
+    --colorTwo: #e1cdc4;
+    --colorThree: #fff;
+    --selectionColor: #a8736e;
+    --text-align: center;
+    --textColor: #484949;
+}
+
+body {
+    background-color: var(--backgroundColor);
+    font-family: 'Garamond', Helvetica, Arial, sans-serif;
+}
+
+::selection {
+    background-color: var(--selectionColor);
+    color: var(--colorThree);
+}
+
+/* navigation bar */
+ul.nav {
+    font-size: 1.5rem;
+    line-height: 3rem;
+    list-style: none;
+    margin: 0;
+    padding-top: 3rem;
+    text-align: var(--text-align);
+}
+
+/* text */
+h1 {
+    color: var(--colorOne);
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    padding-top: 4rem;
+    text-align: var(--text-align);
+}
+
+h2 {
+    color: var(--textColor);
+    font-size: 1.5rem;
+    text-align: var(--text-align);
+}
+
+p {
+    color: var(--textColor);
+    font-size: 1.5rem;
+    text-align: var(--text-align);
+}
+
+/* links */
+a:link,
+a:visited {
+    background-color: var(--colorTwo);
+    border-radius: 1rem;
+    color: var(--colorThree);
+    font-weight: bold;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    text-decoration: none;
+}
+
+a:hover {
+    color: var(--selectionColor);
+    transition: 0.4s ease-out;
+}
+
+/* forms and button */
+.form {
+    margin-top: 2rem;
+    text-align: var(--text-align);
+}
+
+.fill-form {
+    border-radius: 1rem;
+    border: 0.5px solid lightgrey;
+    height: 1.5rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    width: 10%;
+}
+
+.submit-btn {
+    background-color: var(--colorOne);
+    border-radius: 1rem;
+    border: 0;
+    color: var(--backgroundColor);
+    cursor: pointer;
+    font-weight: bold;
+    height: 2rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
