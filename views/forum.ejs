@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%=forumName%></title>
+    <link rel="stylesheet" type="text/css" href="/main.css" />
+</head>
+
+<body>
+    <h1>Forum</h1>
+    <nav class="navigation">
+        <a href="/">Home</a>
+        <a href="forum">Forum</a>
+        <a href="createthread">Create Thread</a>
+    </nav>
+
+    <!-- display threads as a table -->
+    <% if (threads && threads.length > 0) { %>
+    <table class="forum-table">
+        <tr>
+            <th>Threads:</th>
+        </tr>
+        <% threads.forEach(thread => { %>
+        <tr>
+            <td>
+                <a href="/forum/<%= thread.id %>">
+                    <h3><%= thread.title %></h3>
+                </a>
+            </td>
+        </tr>
+        <% }); %>
+    </table>
+    <% } else { %>
+    <div class="container">
+        <p>No threads available.</p>
+    </div>
+    <% } %>
+</body>
+
+</html>
