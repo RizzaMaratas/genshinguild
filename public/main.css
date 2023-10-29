@@ -1,4 +1,4 @@
-/* body */
+/* global */
 :root {
     --backgroundColor: #faf2ea;
     --colorOne: #B4846C;
@@ -19,45 +19,6 @@ body {
     min-height: 100vh;
     margin: 0;
     padding: 0 60px;
-}
-
-/* container */
-.container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 50vh;
-    padding: 20px;
-    box-sizing: border-box;
-}
-
-::selection {
-    background-color: var(--selectionColor);
-    color: var(--colorThree);
-}
-
-/* navigation bar */
-.navigation {
-    display: flex;
-    justify-content: center;
-    font-size: 1.5rem;
-    line-height: 3rem;
-    list-style: none;
-    margin: 0;
-    text-align: var(--text-align);
-    position: sticky;
-    top: 0;
-    background-color: var(--backgroundColor);
-    z-index: 100;
-}
-
-.navigation a {
-    background-color: var(--colorTwo);
-    color: var(--colorThree);
-    border: 1px solid var(--colorTwo);
-    border-radius: 1rem;
-    margin: 0 10px;
 }
 
 /* text */
@@ -82,6 +43,29 @@ p {
     text-align: justify;
     max-width: 800px;
     margin: 10px 0;
+}
+
+/* navigation */
+.navigation {
+    display: flex;
+    justify-content: center;
+    font-size: 1.5rem;
+    line-height: 3rem;
+    list-style: none;
+    margin: 0;
+    text-align: var(--text-align);
+    position: sticky;
+    top: 0;
+    background-color: var(--backgroundColor);
+    z-index: 100;
+}
+
+.navigation a {
+    background-color: var(--colorTwo);
+    color: var(--colorThree);
+    border: 1px solid var(--colorTwo);
+    border-radius: 1rem;
+    margin: 0 10px;
 }
 
 /* links */
@@ -169,11 +153,35 @@ form button:hover {
     color: var(--colorThree);
 }
 
-/* thread title text color */
 .forum-table td a {
     color: var(--textColor);
+    text-decoration: none;
 }
 
+.forum-table td a:hover {
+    color: var(--selectionColor);
+    text-decoration:underline;
+    text-decoration-style: wavy;
+    transition: 0.4s ease-out;
+}
+
+/* container */
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 50vh;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+::selection {
+    background-color: var(--selectionColor);
+    color: var(--colorThree);
+}
+
+/* thread section */
 .thread-section {
     border: 1px solid var(--colorOne);
     border-radius: 1rem;
@@ -182,6 +190,7 @@ form button:hover {
     box-sizing: border-box;
     width: 100%;
     text-align: justify;
+    font-size: 1.3rem;
 }
 
 /* media query for responsiveness */
@@ -206,6 +215,7 @@ form button:hover {
 }
 
 @media screen and (min-width: 601px) {
+
     form input,
     form textarea {
         width: 400%;

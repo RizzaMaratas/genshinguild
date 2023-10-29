@@ -15,15 +15,17 @@
         <a href="/forum">Forum</a>
     </nav>
 
-    <form action="/createthread" method="post">
-        <label for="title">Thread Title:</label>
-        <input type="text" id="title" name="title" required>
+    <div class="container">
+        <form action="/createthread" method="post">
+            <label for="title">Thread Title:</label>
+            <input type="text" id="title" name="title" required>
 
-        <label for="content">Thread Content:</label>
-        <textarea id="content" name="content" required></textarea>
+            <label for="content">Thread Content:</label>
+            <textarea id="content" name="content" required></textarea>
 
-        <button type="submit">Create Thread</button>
-    </form>
+            <button type="submit">Create Thread</button>
+        </form>
+    </div>
 </body>
 
 </html>
