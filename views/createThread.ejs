@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Thread - <%= forumName %></title>
+    <link rel="stylesheet" type="text/css" href="/main.css" />
+</head>
+
+<body>
+    <h1>Create Thread</h1>
+    <nav class="navigation">
+        <a href="/">Home</a>
+        <a href="/forum">Forum</a>
+    </nav>
+
+    <form action="/createthread" method="post">
+        <label for="title">Thread Title:</label>
+        <input type="text" id="title" name="title" required>
+
+        <label for="content">Thread Content:</label>
+        <textarea id="content" name="content" required></textarea>
+
+        <button type="submit">Create Thread</button>
+    </form>
+</body>
+
+</html>

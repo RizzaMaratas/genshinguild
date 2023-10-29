@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= thread.title %> - <%=forumName%></title>
+    <link rel="stylesheet" type="text/css" href="/main.css" />
+</head>
+
+<body>
+    <h1><%=forumName%></h1>
+    <nav class="navigation">
+        <a href="/">Home</a>
+        <a href="/forum">Back to Forum</a>
+    </nav>
+    <div class="thread-section">
+        <h2><%= thread.title %></h2>
+    </div>
+    <div class="thread-section">
+        <p><%= thread.content %></p>
+    </div>
+</body>
+
+</html>

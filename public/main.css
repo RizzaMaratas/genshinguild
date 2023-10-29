@@ -12,6 +12,24 @@
 body {
     background-color: var(--backgroundColor);
     font-family: 'Garamond', Helvetica, Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0 60px;
+}
+
+/* container */
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 50vh;
+    padding: 20px;
+    box-sizing: border-box;
 }
 
 ::selection {
@@ -20,13 +38,26 @@ body {
 }
 
 /* navigation bar */
-ul.nav {
+.navigation {
+    display: flex;
+    justify-content: center;
     font-size: 1.5rem;
     line-height: 3rem;
     list-style: none;
     margin: 0;
-    padding-top: 3rem;
     text-align: var(--text-align);
+    position: sticky;
+    top: 0;
+    background-color: var(--backgroundColor);
+    z-index: 100;
+}
+
+.navigation a {
+    background-color: var(--colorTwo);
+    color: var(--colorThree);
+    border: 1px solid var(--colorTwo);
+    border-radius: 1rem;
+    margin: 0 10px;
 }
 
 /* text */
@@ -39,22 +70,23 @@ h1 {
 }
 
 h2 {
-    color: var(--textColor);
-    font-size: 1.5rem;
+    color: var(--colorTwo);
+    font-size: 2rem;
     text-align: var(--text-align);
+    margin-top: 2rem;
 }
 
 p {
     color: var(--textColor);
     font-size: 1.5rem;
-    text-align: var(--text-align);
+    text-align: justify;
+    max-width: 800px;
+    margin: 10px 0;
 }
 
 /* links */
 a:link,
 a:visited {
-    background-color: var(--colorTwo);
-    border-radius: 1rem;
     color: var(--colorThree);
     font-weight: bold;
     padding-left: 1.5rem;
@@ -92,4 +124,65 @@ a:hover {
     height: 2rem;
     padding-left: 1rem;
     padding-right: 1rem;
+}
+
+/* table */
+.forum-table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 2rem;
+    border-radius: 1rem;
+    overflow: hidden;
+}
+
+.forum-table th,
+.forum-table td {
+    padding: 8px;
+    text-align: left;
+    padding-left: 1rem;
+}
+
+.forum-table tr:nth-child(even) {
+    background-color: var(--colorTwo);
+}
+
+.forum-table th {
+    background-color: var(--colorOne);
+    color: var(--colorThree);
+}
+
+/* thread title text color */
+.forum-table td a {
+    color: var(--textColor);
+}
+
+.thread-section {
+    border: 1px solid var(--colorOne);
+    border-radius: 1rem;
+    padding: 20px;
+    margin-top: 2rem;
+    box-sizing: border-box;
+    width: 100%;
+    text-align: justify;
+}
+
+/* media query for responsiveness */
+@media screen and (max-width: 600px) {
+    h1 {
+        font-size: 3rem;
+        padding-top: 2rem;
+    }
+
+    p {
+        font-size: 1.3rem;
+    }
+
+    .navigation {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .navigation a {
+        margin: 5px 0;
+    }
 }
