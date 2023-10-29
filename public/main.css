@@ -99,31 +99,49 @@ a:hover {
     transition: 0.4s ease-out;
 }
 
-/* forms and button */
-.form {
-    margin-top: 2rem;
-    text-align: var(--text-align);
+/* form */
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-.fill-form {
-    border-radius: 1rem;
-    border: 0.5px solid lightgrey;
-    height: 1.5rem;
-    padding-left: 1rem;
-    padding-right: 1rem;
-    width: 10%;
+form label {
+    margin-bottom: 0.5rem;
+    font-size: 1.5rem;
+    color: var(--colorTwo);
+    font-weight: bold;
 }
 
-.submit-btn {
+form input,
+form textarea {
+    margin-bottom: 1rem;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    border: 1px solid var(--colorTwo);
+    width: 100%;
+}
+
+form textarea {
+    height: 150px;
+}
+
+form button {
     background-color: var(--colorOne);
     border-radius: 1rem;
     border: 0;
     color: var(--backgroundColor);
     cursor: pointer;
     font-weight: bold;
+    font-family: 'Garamond', Helvetica, Arial, sans-serif;
+    font-size: 1.2rem;
     height: 2rem;
-    padding-left: 1rem;
-    padding-right: 1rem;
+    width: 100%;
+}
+
+form button:hover {
+    background-color: var(--selectionColor);
+    transition: 0.4s ease-out;
 }
 
 /* table */
@@ -184,5 +202,16 @@ a:hover {
 
     .navigation a {
         margin: 5px 0;
+    }
+}
+
+@media screen and (min-width: 601px) {
+    form input,
+    form textarea {
+        width: 400%;
+    }
+
+    form button {
+        width: 100%;
     }
 }
