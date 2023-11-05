@@ -1,11 +1,12 @@
 module.exports = function(app, forumData) {
     // handle our routes
+    // render the index page
     app.get('/', function(req, res) {
-        res.render('index.ejs', forumData)
+        res.render('index.ejs', forumData);
     });
 
+    // fetch threads from the database and render the forum page
     app.get('/forum', function(req, res) {
-        // fetch threads from the database
         db.query('SELECT * FROM threads', (err, threads) => {
             if (err) {
                 console.error('Error fetching threads from the database:', err);
@@ -21,11 +22,12 @@ module.exports = function(app, forumData) {
         });
     });
 
+    // handle requests for a specific thread
     app.get('/forum/:threadId', function (req, res) {
         const threadId = req.params.threadId;
         console.log('Requested Thread ID:', threadId);
     
-        // Fetch the selected thread from the database
+        // fetch the selected thread from the database
         db.query('SELECT * FROM threads WHERE id = ?', [threadId], (err, selectedThread) => {
             if (err) {
                 console.error('Error fetching thread from the database:', err);
@@ -33,26 +35,27 @@ module.exports = function(app, forumData) {
             }
     
             if (selectedThread.length === 0) {
-                // Handle the case where the thread is not found
+                // handle the case where the thread is not found
                 return res.status(404).send('Thread not found');
             }
     
             console.log('Fetched Thread:', selectedThread);
     
-            // Render the fullThread.ejs template with the thread data
+            // render the fullThread.ejs with forum name and the selected thread
             res.render('fullThread.ejs', {
                 forumName: forumData.forumName,
-                thread: selectedThread[0] // Assuming the thread data is an object
+                thread: selectedThread[0]
             });
         });
     });
    
+    // render the createThread page
     app.get('/createthread', function(req, res) {
         res.render('createThread.ejs', forumData);
     });
 
+    // process submitted thread data and save to the database
     app.post('/createthread', function(req, res) {
-        // process the submitted thread data here
         const threadTitle = req.body.title;
         const threadContent = req.body.content;
 
