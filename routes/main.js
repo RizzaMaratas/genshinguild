@@ -21,27 +21,32 @@ module.exports = function(app, forumData) {
         });
     });
 
-    app.get('/forum/:threadId', function(req, res) {
+    app.get('/forum/:threadId', function (req, res) {
         const threadId = req.params.threadId;
         console.log('Requested Thread ID:', threadId);
-
-        // fetch the selected thread from the database
+    
+        // Fetch the selected thread from the database
         db.query('SELECT * FROM threads WHERE id = ?', [threadId], (err, selectedThread) => {
             if (err) {
                 console.error('Error fetching thread from the database:', err);
                 return res.status(500).send('Internal Server Error');
             }
-
+    
+            if (selectedThread.length === 0) {
+                // Handle the case where the thread is not found
+                return res.status(404).send('Thread not found');
+            }
+    
             console.log('Fetched Thread:', selectedThread);
-
-            // render thread with title and content
+    
+            // Render the fullThread.ejs template with the thread data
             res.render('fullThread.ejs', {
                 forumName: forumData.forumName,
-                thread: selectedThread[0]
+                thread: selectedThread[0] // Assuming the thread data is an object
             });
         });
     });
-
+   
     app.get('/createthread', function(req, res) {
         res.render('createThread.ejs', forumData);
     });

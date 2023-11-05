@@ -42,7 +42,7 @@ p {
     font-size: 1.5rem;
     text-align: justify;
     max-width: 800px;
-    margin: 10px 0;
+    margin: 30px 0;
 }
 
 /* navigation */
@@ -85,6 +85,7 @@ a:hover {
 
 /* form */
 form {
+    margin: 30px 0;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -104,10 +105,11 @@ form textarea {
     border-radius: 0.5rem;
     border: 1px solid var(--colorTwo);
     width: 100%;
+    resize: none;
 }
 
 form textarea {
-    height: 150px;
+    height: 15rem;
 }
 
 form button {
@@ -160,7 +162,7 @@ form button:hover {
 
 .forum-table td a:hover {
     color: var(--selectionColor);
-    text-decoration:underline;
+    text-decoration: underline;
     text-decoration-style: wavy;
     transition: 0.4s ease-out;
 }
@@ -172,7 +174,6 @@ form button:hover {
     align-items: center;
     justify-content: center;
     min-height: 50vh;
-    padding: 20px;
     box-sizing: border-box;
 }
 
@@ -193,6 +194,53 @@ form button:hover {
     font-size: 1.3rem;
 }
 
+/* dropdown menu */
+.dropdown {
+    display: none;
+    position: relative;
+}
+
+.dropdown .dropbtn {
+    font-family: 'Garamond', Helvetica, Arial, sans-serif;
+    background-color: var(--colorTwo);
+    color: var(--colorThree);
+    border: 1px solid var(--colorTwo);
+    border-radius: 1rem;
+    margin: 0 10px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    padding: 0px 10px;
+}
+
+.dropdown .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: var(--colorTwo);
+    min-width: 160px;
+    z-index: 1;
+    border: 1px solid var(--selectionColor);
+}
+
+.dropdown .dropdown-content.active {
+    display: block;
+    text-align: center;
+}
+
+.dropdown .dropdown-content a {
+    color: var(--textColor);
+    padding: 0px 5px;
+    text-decoration: none;
+    display: block;
+    font-size: 1rem;
+}
+
+.dropdown .dropdown-content a:hover {
+    background-color: var(--selectionColor);
+    color: var(--colorThree);
+    border-radius: 0;
+}
+
 /* media query for responsiveness */
 @media screen and (max-width: 600px) {
     h1 {
@@ -210,7 +258,27 @@ form button:hover {
     }
 
     .navigation a {
-        margin: 5px 0;
+        display: none;
+    }
+
+    .dropdown {
+        display: inline-block;
+    }
+
+    .dropdown .dropdown-content {
+        position: absolute;
+        top: 50px;
+        right: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: var(--colorTwo);
+        display: none;
+        min-width: 160px;
+        z-index: 1;
+    }
+
+    .dropdown:hover .dropdown-content {
+        display: block;
     }
 }
 
