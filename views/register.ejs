@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - <%= forumName %></title>
+    <link rel="stylesheet" type="text/css" href="/main.css" />
+    <script src="script.js"></script>
+</head>
+
+<body>
+    <h1>Register to <%= forumName %></h1>
+    <div class="back-to-home">
+        <a href="/">Back to Homepage</a>
+    </div>
+
+    <div class="container">
+
+        <% if (errorMessage) { %>
+        <div class="error-message">
+            <p><%= errorMessage %></p>
+        </div>
+        <% } %>
+
+        <% if (successMessage) { %>
+        <div class="success-message">
+            <p><%= successMessage %></p>
+        </div>
+        <% } %>
+
+        <form action="/register" method="post">
+            <label for="title">First Name:</label>
+            <input id="first" type="text" name="first" placeholder="First name" required>
+            <label for="title">Last name:</label>
+            <input id="last" type="text" name="last" placeholder="Last name" required>
+            <label for="title">Email:</label>
+            <input id="email" type="email" name="email" placeholder="Email" oninput="this.value = this.value.toLowerCase()" pattern="/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/" title="Please enter a valid email address" required>
+            <label for="title">Username:</label>
+            <input id="username" type="text" name="username" placeholder="Username" pattern="[A-Za-z]{3,}" title="Please enter at least 3 letters" required>
+            <label for="title">Password:</label>
+            <input id="password" type="password" name="password" placeholder="Password" required>
+
+            <button type="submit">Register</button>
+        </form>
+
+        <div class="login-link-text">
+            <span>Already have an account? </span>
+            <br>
+            <a href="/login">Login here</a>
+        </div>
+    </div>
+</body>
+
+</html>
