@@ -7,7 +7,6 @@
     --selectionColor: #a8736e;
     --text-align: center;
     --textColor: #484949;
-    --errorMessage: #cc0000;
 }
 
 body {
@@ -38,6 +37,13 @@ h2 {
     margin-top: 2rem;
 }
 
+h4 {
+    color: var(--textColor);
+    font-size: 1.1rem;
+    text-align: var(--text-align);
+    font-weight: normal;
+}
+
 p {
     color: var(--textColor);
     font-size: 1.5rem;
@@ -55,9 +61,7 @@ p {
     list-style: none;
     margin: 0;
     text-align: var(--text-align);
-    position: sticky;
     top: 0;
-    background-color: var(--backgroundColor);
     z-index: 100;
 }
 
@@ -159,13 +163,11 @@ form button:hover {
 .forum-table td a {
     color: var(--textColor);
     text-decoration: none;
+    transition: color 0.3s ease-out, background-color 0.3s ease-out;
 }
 
 .forum-table td a:hover {
     color: var(--selectionColor);
-    text-decoration: underline;
-    text-decoration-style: wavy;
-    transition: 0.4s ease-out;
 }
 
 /* container */
@@ -349,6 +351,10 @@ form button:hover {
 
 /* media query for responsiveness */
 @media screen and (max-width: 600px) {
+    body {
+        padding-bottom: 2rem;
+    }
+
     h1 {
         font-size: 3rem;
         padding-top: 2rem;

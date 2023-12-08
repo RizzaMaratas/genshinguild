@@ -31,15 +31,16 @@
 
         <form action="/register" method="post">
             <label for="title">First Name:</label>
-            <input id="first" type="text" name="first" placeholder="First name" required>
+            <input id="first" type="text" name="first" placeholder="First name" required pattern="[A-Za-z]+" title="Use only letters without spaces">
             <label for="title">Last name:</label>
-            <input id="last" type="text" name="last" placeholder="Last name" required>
+            <input id="last" type="text" name="last" placeholder="Last name" required pattern="[A-Za-z]+" title="Use only letters without spaces">
             <label for="title">Email:</label>
-            <input id="email" type="email" name="email" placeholder="Email" oninput="this.value = this.value.toLowerCase()" pattern="/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/" title="Please enter a valid email address" required>
+            <input id="email" type="email" name="email" placeholder="Email" oninput="this.value = this.value.toLowerCase()" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" required>
             <label for="title">Username:</label>
-            <input id="username" type="text" name="username" placeholder="Username" pattern="[A-Za-z]{3,}" title="Please enter at least 3 letters" required>
-            <label for="title">Password:</label>
-            <input id="password" type="password" name="password" placeholder="Password" required>
+            <input id="username" type="text" name="username" placeholder="Username" pattern="[A-Za-z]{3,}" title="Please enter at least 3 letters." required>
+            <label for="password">Password:</label>
+            <input id="password" type="password" name="password" placeholder="Password" required pattern="(?=.*\d)(?=.*[A-Z]).{8,}"
+            title="Please enter a strong password (at least 8 characters with at least one uppercase letter and one number).">            
 
             <button type="submit">Register</button>
         </form>
