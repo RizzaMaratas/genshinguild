@@ -25,6 +25,18 @@ module.exports = function(app, forumData) {
         });
     });
 
+    // render the about page
+    app.get('/about', function(req, res) {
+        // check if user is logged in
+        const userLoggedIn = req.session.userId ? true : false;
+        const username = userLoggedIn ? req.session.userId : '';
+        res.render('about.ejs', {
+            forumName: forumData.forumName,
+            userLoggedIn: userLoggedIn,
+            username: username
+        });
+    });
+
     // fetch threads from the database and render the forum page
     app.get('/forum', function(req, res) {
         db.query('SELECT id, title, content, username FROM threads', (err, threads) => {
