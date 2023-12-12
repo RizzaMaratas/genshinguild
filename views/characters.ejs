@@ -40,6 +40,7 @@
         <a href="forum">Forum</a>
         <a href="about">About</a>
         <a href="characters">Characters</a>
+        <a href="search">Search</a>
         <div class="dropdown">
             <button class="dropbtn" onclick="toggleMenu()">Menu &#9662;</button>
             <div class="dropdown-content">
@@ -47,10 +48,12 @@
                 <a href="forum">Forum</a>
                 <a href="about">About</a>
                 <a href="characters">Characters</a>
+                <a href="search">Search</a>
             </div>
         </div>
     </nav>
 
+    <% if (characters.length > 0) { %>
     <ul>
         <% characters.forEach(function(character) { %>
         <h3><%= character.name %>
@@ -58,9 +61,14 @@
             <p>Element: <%= character.element %></p>
             <p>Weapon: <%= character.weapon %></p>
             <p>Region: <%= character.region %></p>
-            <% }) %>
         </h3>
+        <% }) %>
     </ul>
+    <% } else { %>
+    <div class="container">
+        <p>No characters found.</p>
+        <% } %>
+    </div>
 </body>
 
 </html>

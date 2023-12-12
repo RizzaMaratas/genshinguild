@@ -330,12 +330,42 @@ module.exports = function(app, forumData) {
                 res.redirect('./');
             }
 
-            // Pass the character data to the characters.ejs template
+            // pass the character data to the characters.ejs template
             res.render('characters.ejs', {
                 forumName: forumData.forumName,
                 userLoggedIn: userLoggedIn,
                 username: username,
                 characters: characters
+            });
+        });
+    });
+
+    // search
+    app.get('/search', function(req, res) {
+        res.render("search.ejs", {
+            forumName: forumData.forumName,
+            userLoggedIn: req.session.userId ? true : false,
+            username: req.session.userId || ''
+        });
+    });
+
+    // search result
+    app.get('/search-result', function(req, res) {
+        // search in the database
+        let sqlquery = "SELECT * FROM characters WHERE name LIKE '%" + req.query.keyword + "%'";
+
+        // execute the SQL query
+        db.query(sqlquery, (err, result) => {
+            if (err) {
+                res.redirect('./');
+            }
+
+            // pass the search results to search-result.ejs
+            res.render("characters.ejs", {
+                forumName: forumData.forumName,
+                userLoggedIn: req.session.userId ? true : false,
+                username: req.session.userId || '',
+                characters: result
             });
         });
     });
