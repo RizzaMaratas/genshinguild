@@ -1,4 +1,7 @@
-const { check, validationResult } = require('express-validator');
+const {
+    check,
+    validationResult
+} = require('express-validator');
 
 module.exports = function(app, forumData) {
     // redirect to login if user is not authenticated
@@ -311,5 +314,29 @@ module.exports = function(app, forumData) {
                 });
             });
         }
+    });
+
+    // render the characters page
+    app.get('/characters', function(req, res) {
+        // check if user is logged in
+        const userLoggedIn = req.session.userId ? true : false;
+        const username = userLoggedIn ? req.session.userId : '';
+
+        let sqlquery = "SELECT * FROM characters"; // query database to get all the characters
+
+        // execute sql query to fetch character data
+        db.query(sqlquery, (err, characters) => {
+            if (err) {
+                res.redirect('./');
+            }
+
+            // Pass the character data to the characters.ejs template
+            res.render('characters.ejs', {
+                forumName: forumData.forumName,
+                userLoggedIn: userLoggedIn,
+                username: username,
+                characters: characters
+            });
+        });
     });
 }

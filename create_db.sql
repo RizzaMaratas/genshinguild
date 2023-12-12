@@ -24,3 +24,34 @@ CREATE TABLE 'threads' (
   KEY 'fk_user_id' ('user_id'),
   CONSTRAINT 'fk_user_id' FOREIGN KEY ('user_id') REFERENCES 'userdetails' ('id') ON DELETE CASCADE
 )
+
+CREATE TABLE Characters (
+    character_id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(255) NOT NULL,
+    quality VARCHAR(50),
+    element VARCHAR(50),
+    weapon VARCHAR(50),
+    region VARCHAR(50)
+);
+
+INSERT INTO Characters (name, quality, element, weapon, region)
+VALUES
+    ('Amber', '4 Star', 'Pyro', 'Bow', 'Mondstadt'),
+    ('Barbara', '4 Star', 'Hydro', 'Catalyst', 'Mondstadt'),
+    ('Beidou', '4 Star', 'Electro', 'Claymore', 'Liyue'),
+    ('Bennett', '4 Star', 'Pyro', 'Sword', 'Mondstadt'),
+    ('Chongyun', '4 Star', 'Cryo', 'Claymore', 'Liyue'),
+    ('Diluc', '5 Star', 'Pyro', 'Claymore', 'Mondstadt'),
+    ('Fischl', '4 Star', 'Electro', 'Bow', 'Mondstadt'),
+    ('Jean', '5 Star', 'Anemo', 'Sword', 'Mondstadt'),
+    ('Kaeya', '4 Sstar', 'Cryo', 'Sword', 'Mondstadt'),
+    ('Keqing', '5 Star', 'Electro', 'Sword', 'Liyue'),
+    ('Klee', '5 Star', 'Pyro', 'Catalyst', 'Mondstadt'),
+    ('Lisa', '4 Star', 'Electro', 'Catalyst', 'Mondstadt'),
+    ('Mona', '5 Star', 'Hydro', 'Catalyst', 'Mondstadt'),
+    ('Ningguang', '4 Star', 'Geo', 'Catalyst', 'Liyue'),
+    ('Noelle', '4 Star', 'Geo', 'Claymore', 'Mondstadt'),
+    ('Qiqi', '5 Star', 'Cryo', 'Sword', 'Liyue'),
+    ('Razor', '4 Star', 'Electro', 'Claymore', 'Mondstadt'),
+    ('Sucrose', '4 Star', 'Anemo', 'Catalyst', 'Mondstadt'),
+    ('Traveler', '5 Star', 'None', 'Sword', 'None');

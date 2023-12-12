@@ -12,7 +12,13 @@
 </head>
 
 <body>
-    <h1>Welcome to <%= forumName %></h1>
+    <h1><%= forumName %></h1>
+
+    <section class="banner">
+        <svg class="waves" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 250">
+            <path fill="#e1cdc4" d="M 0,400 C 0,400 0,200 0,200 C 152.2666666666667,223.6 304.5333333333334,247.2 464,240 C 623.4666666666666,232.8 790.1333333333332,194.80000000000004 954,183 C 1117.8666666666668,171.19999999999996 1278.9333333333334,185.59999999999997 1440,200 C 1440,200 1440,400 1440,400 Z"></path>
+        </svg>
+    </section>
 
     <div class="auth-links">
         <!-- show welcome message and logout button if user is logged in -->
@@ -39,18 +45,20 @@
         <a href="/">Home</a>
         <a href="forum">Forum</a>
         <a href="about">About</a>
+        <a href="characters">Characters</a>
         <div class="dropdown">
             <button class="dropbtn" onclick="toggleMenu()">Menu &#9662;</button>
             <div class="dropdown-content">
                 <a href="/">Home</a>
                 <a href="forum">Forum</a>
                 <a href="about">About</a>
+                <a href="characters">Characters</a>
             </div>
         </div>
     </nav>
 
     <div class="container">
-        <p>Welcome to the Genshin Guild - the ultimate hub for adventurers in the vast realm of Teyvat! It's a community where fans, experienced players or newcomers, come together to exchange insights, strategies, and tales from their journey. Whether you're seeking advice on team compositions, unraveling the lore, or simply sharing your favorite scenic screenshots, our forum is a friendly place for everyone.<br><br>
+        <p>Welcome to genshin guild traveler! A hub for adventurers in the vast realm of Teyvat. It's a community where fans, experienced players or newcomers, come together to exchange insights, strategies, and tales from their journey. Whether you're seeking advice on team compositions, unraveling the lore, or simply sharing your favorite scenic screenshots, our forum is a friendly place for everyone.<br><br>
         Join the conversation about the latest updates, character builds, and event strategies and stay up-to-date with the latest news and patch notes. Sign up now and become a part of our growing community of Genshin Impact fans!</p>
     </div>
 </body>

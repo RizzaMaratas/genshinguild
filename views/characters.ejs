@@ -12,7 +12,7 @@
 </head>
 
 <body>
-    <h1>Game Features</h1>
+    <h1>Characters List</h1>
 
     <div class="auth-links">
         <!-- show welcome message and logout button if user is logged in -->
@@ -51,16 +51,16 @@
         </div>
     </nav>
 
-    <div class="container"><br>
-        <h3>A Grand Fantasy Journey</h3>
-        <p>Take part in an engaging single-player adventure. Discover the secrets of Teyvat and yourself as a traveler from another world setting out to reconcile with your long-lost sibling.</p>
-        <h3>A World Awaiting Exploration</h3>
-        <p>Traverse the vast expanse of the sky, swim through glistening lakes, and ascend high peaks. Explore off the main track to unearth all the mysteries and wonders of a world full of unanswered questions.</p>
-        <h3>Explore Alone or Team Up</h3>
-        <p>Take on foes solo or team up with friends to battle formidable monsters with cross-play available on PS4, iOS, Android, and PC, supporting up to 4 players.</p>
-        <h3>Harness Elemental Mastery</h3>
-        <p>Using the various elements to your advantage will help you solve difficult puzzles and overcome strong opponents. </p>
-    </div>
+    <ul>
+        <% characters.forEach(function(character) { %>
+        <h3><%= character.name %>
+            <p>Rarity: <%= character.quality %></p>
+            <p>Element: <%= character.element %></p>
+            <p>Weapon: <%= character.weapon %></p>
+            <p>Region: <%= character.region %></p>
+            <% }) %>
+        </h3>
+    </ul>
 </body>
 
 </html>

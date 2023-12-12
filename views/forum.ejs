@@ -38,25 +38,27 @@
         <a href="/">Home</a>
         <a href="forum">Forum</a>
         <a href="about">About</a>
+        <a href="characters">Characters</a>
         <div class="dropdown">
             <button class="dropbtn" onclick="toggleMenu()">Menu &#9662;</button>
             <div class="dropdown-content">
                 <a href="/">Home</a>
                 <a href="forum">Forum</a>
                 <a href="about">About</a>
-                <a href="createthread">Create Thread</a>
+                <a href="createthread">Create Post</a>
+                <a href="characters">Characters</a>
             </div>
         </div>
     </nav><br>
     <nav class="navigation">
-        <a href="createthread">Create Thread</a>
+        <a href="createthread">Create Post</a>
     </nav>
 
     <!-- display threads as a table -->
     <% if (threads && threads.length > 0) { %>
     <table class="forum-table">
         <tr>
-            <th>Threads:</th>
+            <th>Posts:</th>
         </tr>
         <% threads.forEach(thread => { %>
         <tr>
@@ -73,7 +75,7 @@
         <p>No threads available.</p>
     </div>
     <% } %>
-    
+
 </body>
 
 </html>
