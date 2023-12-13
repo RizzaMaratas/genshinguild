@@ -383,10 +383,10 @@ module.exports = function(app, forumData) {
 
         // if the keyword is a single letter, search for names starting with that letter
         if (keyword.length === 1) {
-            let sqlquery = "SELECT * FROM characters WHERE name LIKE '" + keyword + "%'";
+            let sqlquery = "SELECT * FROM characters WHERE name LIKE ?";
 
             // execute the SQL query
-            db.query(sqlquery, (err, result) => {
+            db.query(sqlquery, [keyword + '%'], (err, result) => {
                 if (err) {
                     res.redirect('./');
                 }
@@ -441,6 +441,27 @@ module.exports = function(app, forumData) {
         });
     });
 
+    // deleting a user route
+    app.post('/delete-account', redirectLogin, function(req, res) {
+        const userId = req.session.userDbId;
+
+        // delete the user's account based on their ID
+        db.query('DELETE FROM userDetails WHERE id = ?', [userId], (err, result) => {
+            if (err) {
+                console.error('Error deleting user account from the database:', err);
+                return res.status(500).send('Internal Server Error');
+            }
+
+            // destroy the user's session and redirect to the homepage
+            req.session.destroy(err => {
+                if (err) {
+                    console.error(err);
+                }
+                res.redirect('/');
+            });
+        });
+    });
+
     // forum api
     app.get('/api', function(req, res) {
         let keyword = req.query.keyword;
@@ -455,7 +476,7 @@ module.exports = function(app, forumData) {
 
         db.query(sqlQuery, queryParams, (err, result) => {
             if (err) {
-                console.error('Error fetching posts:', err);
+                console.error('Error fetching threads:', err);
                 return res.status(500).json({
                     error: 'Internal server error'
                 });
@@ -463,7 +484,7 @@ module.exports = function(app, forumData) {
 
             if (!result || result.length === 0) {
                 return res.status(404).json({
-                    error: 'No posts found'
+                    error: 'No threads found'
                 });
             }
 
@@ -471,7 +492,7 @@ module.exports = function(app, forumData) {
         });
     });
 
-    // weather api
+    // weather route
     app.get('/weather', function(req, res) {
         // check if user is logged in
         const userLoggedIn = req.session.userId ? true : false;
@@ -508,20 +529,19 @@ module.exports = function(app, forumData) {
                 });
             } else {
                 try {
-                    const weather = JSON.parse(body);
-                    if (response.statusCode === 200 && weather.main) {
+                    const weatherData = JSON.parse(body);
+                    if (response.statusCode === 200 && weatherData.main) {
                         const weatherMessage = {
-                            city: weather.name,
-                            description: weather.weather[0].description,
-                            temperature: `Temperature: ${weather.main.temp}°C`,
-                            feels_like: `Feels Like: ${weather.main.feels_like}°C`,
-                            temp_min: `Minimum Temperature: ${weather.main.temp_min}°C`,
-                            temp_max: `Maximum Temperature: ${weather.main.temp_max}°C`,
-                            pressure: `Pressure: ${weather.main.pressure} hPa`,
-                            humidity: `Humidity: ${weather.main.humidity}%`,
-                            wind: `Wind Speed: ${weather.wind.speed} m/s, Direction: ${weather.wind.deg}°`,
-                            clouds: `Cloudiness: ${weather.clouds.all}%`,
-                            rain: weather.rain ? `Rain: ${weather.rain['1h']} mm/h` : 'Rain: None',
+                            city: weatherData.name,
+                            description: weatherData.weather[0].description,
+                            temperature: `Temperature: ${weatherData.main.temp}°C`,
+                            humidity: `Humidity: ${weatherData.main.humidity}%`,
+                            clouds: `Cloudiness: ${weatherData.clouds.all}%`,
+                            feels_like: `Feels Like: ${weatherData.main.feels_like}°C`,
+                            temp_min: `Lowest Temperature: ${weatherData.main.temp_min}°C`,
+                            temp_max: `Highest Temperature: ${weatherData.main.temp_max}°C`,
+                            wind: `Wind Speed: ${weatherData.wind.speed} m/s, Direction: ${weatherData.wind.deg}°`,
+                            rain: weatherData.rain ? `Rain: ${weatherData.rain['1h']} mm/h` : 'Rain: None',
                         };
                         res.render('weather.ejs', {
                             weather: weatherMessage,
@@ -531,14 +551,24 @@ module.exports = function(app, forumData) {
                             username: username
                         });
                     } else {
-                        // handle errors
-                        res.render('weather.ejs', {
-                            weather: null,
-                            error: 'Unable to locate the weather for the city you specified.',
-                            forumName: forumData.forumName,
-                            userLoggedIn: userLoggedIn,
-                            username: username
-                        });
+                        // handle specific status codes or other errors
+                        if (response.statusCode === 404) {
+                            res.render('weather.ejs', {
+                                weather: null,
+                                error: 'City not found.',
+                                forumName: forumData.forumName,
+                                userLoggedIn: userLoggedIn,
+                                username: username
+                            });
+                        } else {
+                            res.render('weather.ejs', {
+                                weather: null,
+                                error: 'Unable to locate the weather for the city you specified.',
+                                forumName: forumData.forumName,
+                                userLoggedIn: userLoggedIn,
+                                username: username
+                            });
+                        }
                     }
                 } catch (parseError) {
                     res.render('weather.ejs', {
@@ -553,23 +583,104 @@ module.exports = function(app, forumData) {
         });
     });
 
-    // deleting a user route
-    app.post('/delete-account', redirectLogin, function(req, res) {
-        const userId = req.session.userDbId;
+    // tv show route
+    app.get('/tvShows', function(req, res) {
+        // check if user is logged in
+        const userLoggedIn = req.session.userId ? true : false;
+        const username = userLoggedIn ? req.session.userId : '';
 
-        // delete the user's account based on their ID
-        db.query('DELETE FROM userDetails WHERE id = ?', [userId], (err, result) => {
-            if (err) {
-                console.error('Error deleting user account from the database:', err);
-                return res.status(500).send('Internal Server Error');
+        res.render('tvShows.ejs', {
+            shows: null,
+            error: null,
+            forumName: forumData.forumName,
+            userLoggedIn: userLoggedIn,
+            username: username
+        });
+    });
+
+    const request = require('request');
+
+    async function fetchEpisodeCount(showId) {
+        return new Promise((resolve, reject) => {
+            request(`https://api.tvmaze.com/shows/${showId}/episodes`, {
+                json: true
+            }, (err, response, body) => {
+                if (err || response.statusCode !== 200) {
+                    reject('Error fetching episodes');
+                    return;
+                }
+                resolve(body.length);
+            });
+        });
+    }
+
+    // tv show route search
+    app.get('/search-shows', function(req, res) {
+        const request = require('request');
+        const query = req.query.search;
+
+        // check if user is logged in
+        const userLoggedIn = req.session.userId ? true : false;
+        const username = userLoggedIn ? req.session.userId : '';
+
+        if (!query) {
+            return res.render('tvShows.ejs', {
+                shows: null,
+                error: 'Please enter a search term.',
+                forumName: forumData.forumName,
+                userLoggedIn: userLoggedIn, // Use the defined userLoggedIn variable
+                username: username
+            });
+        }
+
+        const url = `https://api.tvmaze.com/search/shows?q=${encodeURIComponent(query)}`;
+
+        request(url, {
+            json: true
+        }, async (err, response, body) => {
+            if (err || response.statusCode !== 200) {
+                console.error('API error:', err || response.statusCode);
+                return res.render('tvShows.ejs', {
+                    shows: null,
+                    error: 'Error retrieving data from TVMaze API.',
+                    forumName: forumData.forumName,
+                    userLoggedIn: userLoggedIn,
+                    username: username
+                });
             }
 
-            // destroy the user's session and redirect to the homepage
-            req.session.destroy(err => {
-                if (err) {
-                    console.error(err);
+            if (!body || body.length === 0) {
+                return res.render('tvShows.ejs', {
+                    shows: null,
+                    error: 'No TV shows found matching your search term.',
+                    forumName: forumData.forumName,
+                    userLoggedIn: userLoggedIn,
+                    username: username
+                });
+            }
+
+            const showsWithEpisodes = await Promise.all(body.map(async (showItem) => {
+                try {
+                    const episodeCount = await fetchEpisodeCount(showItem.show.id);
+                    return {
+                        ...showItem,
+                        show: {
+                            ...showItem.show,
+                            episodeCount
+                        }
+                    };
+                } catch (error) {
+                    console.error('Failed to fetch episode count for show:', showItem.show.name, error);
+                    return showItem;
                 }
-                res.redirect('/');
+            }));
+
+            res.render('tvShows.ejs', {
+                shows: showsWithEpisodes,
+                error: null,
+                forumName: forumData.forumName,
+                userLoggedIn: userLoggedIn,
+                username: username
             });
         });
     });

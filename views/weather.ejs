@@ -51,6 +51,7 @@
                 <a href="users">Users</a>
                 <a href="search">Search</a>
                 <a href="weather">Weather</a>
+                <a href="tvShows">TV Shows</a>
                 <a href="/api">Api</a>
             </div>
         </div>
@@ -58,6 +59,7 @@
     <nav class="navigation">
         <a href="search">Search</a>
         <a href="weather">Weather</a>
+        <a href="tvShows">TV Shows</a>
         <a href="/api">Api</a>
     </nav>
 
@@ -71,22 +73,20 @@
         <% if(weather) { %>
         <h2>Weather in <%= weather.city %></h2>
 
-        <p>Weather Description: <%= weather.description %><br>
+        <p>Weather Report: <%= weather.description %><br><br>
             <%= weather.temperature %><br><br>
+            <%= weather.humidity %><br><br>
+            <%= weather.clouds %><br><br>
             <%= weather.feels_like %><br><br>
             <%= weather.temp_min %><br><br>
             <%= weather.temp_max %><br><br>
-            <%= weather.pressure %><br><br>
-            <%= weather.humidity %><br><br>
             <%= weather.wind %><br><br>
-            <%= weather.clouds %><br><br>
             <%= weather.rain %></p>
         <% } %>
 
         <% if(error) { %>
         <p><%= error %></p>
         <% } %>
-
     </div>
 </body>
 

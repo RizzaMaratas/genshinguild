@@ -5,14 +5,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Users - <%= forumName %></title>
+    <title>TV Shows - <%= forumName %></title>
     <link rel="stylesheet" type="text/css" href="/main.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="script.js"></script>
 </head>
 
 <body>
-    <h1>Users List</h1>
+    <h1>TV Shows</h1>
 
     <div class="auth-links">
         <!-- show welcome message and logout button if user is logged in -->
@@ -64,15 +64,38 @@
     </nav>
 
     <div class="container">
-        <p><% users.forEach(user => { %>
-            <%= user.username %> - <%= user.email %><br>
-            <% }); %> </p>
-
-        <!-- delete user button -->
-        <% if (userLoggedIn && username === session.userId) { %>
-        <form action="/delete-account" method="POST">
-            <button type="submit" onclick="return confirm('Are you sure you want to delete your account? Clicking OK will delete your account instantly and log you out.')">Delete Account</button>
+        <h2>Search for a TV Show</h2>
+        <form action="/search-shows" method="get">
+            <input class="search-box" type="text" name="search" placeholder="Default" required>
+            <button type="submit">Submit</button>
         </form>
+
+        <% if(shows) { %>
+        <ul>
+            <% shows.forEach(showItem=> {
+                    const show = showItem.show; %>
+            <li>
+                <h3><%= show.name %><br><br>
+                    <% if(show.image && show.image.medium) { %>
+                    <img src="<%= show.image.medium %>" alt="<%= show.name %>">
+                    <% } %>
+                    <p>Genres: <%= show.genres.join(', ') %></p>
+                    <% if(show.summary) { %>
+                    <div><%- show.summary %></div>
+                    <% } %>
+                    <% if(show.episodeCount !== undefined) { %>
+                    <p>Number of Episodes: <%= show.episodeCount %></p>
+                    <% } else { %>
+                    <p>Episode count not available.</p>
+                    <% } %>
+                    <a href="<%= show.url %>" target="_blank">More Details</a>
+                </h3>
+            </li>
+            <% }); %>
+        </ul>
+
+        <% } else if(error) { %>
+        <p><%= error %></p>
         <% } %>
     </div>
 </body>
