@@ -626,9 +626,9 @@ module.exports = function(app, forumData) {
         if (!query) {
             return res.render('tvShows.ejs', {
                 shows: null,
-                error: 'Please enter a search term.',
+                error: 'Type in a term for searching.',
                 forumName: forumData.forumName,
-                userLoggedIn: userLoggedIn, // Use the defined userLoggedIn variable
+                userLoggedIn: userLoggedIn,
                 username: username
             });
         }
@@ -642,7 +642,7 @@ module.exports = function(app, forumData) {
                 console.error('API error:', err || response.statusCode);
                 return res.render('tvShows.ejs', {
                     shows: null,
-                    error: 'Error retrieving data from TVMaze API.',
+                    error: 'There was a problem while fetching information from the TVMaze API.',
                     forumName: forumData.forumName,
                     userLoggedIn: userLoggedIn,
                     username: username
@@ -652,7 +652,7 @@ module.exports = function(app, forumData) {
             if (!body || body.length === 0) {
                 return res.render('tvShows.ejs', {
                     shows: null,
-                    error: 'No TV shows found matching your search term.',
+                    error: 'There were no TV series that matched your search query.',
                     forumName: forumData.forumName,
                     userLoggedIn: userLoggedIn,
                     username: username
@@ -670,7 +670,7 @@ module.exports = function(app, forumData) {
                         }
                     };
                 } catch (error) {
-                    console.error('Failed to fetch episode count for show:', showItem.show.name, error);
+                    console.error('Unable to retrieve the number of episodes for the show:', showItem.show.name, error);
                     return showItem;
                 }
             }));
