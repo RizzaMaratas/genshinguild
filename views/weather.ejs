@@ -1,17 +1,18 @@
+</html>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= thread.title %> - <%=forumName%></title>
+    <title><%= forumName %></title>
     <link rel="stylesheet" type="text/css" href="/main.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="script.js"></script>
 </head>
 
 <body>
-    <h1><%=forumName%></h1>
+    <h1>Weather</h1>
 
     <div class="auth-links">
         <!-- show welcome message and logout button if user is logged in -->
@@ -36,30 +37,50 @@
 
     <nav class="navigation">
         <a href="/">Home</a>
-        <a href="/forum">Forum</a>
-        <a href="/about">About</a>
-        <a href="/characters">Characters</a>
-        <a href="/search">Search</a>
-        <a href="/weather">Weather</a>
+        <a href="forum">Forum</a>
+        <a href="about">About</a>
+        <a href="characters">Characters</a>
+        <a href="search">Search</a>
+        <a href="weather">Weather</a>
         <div class="dropdown">
             <button class="dropbtn" onclick="toggleMenu()">Menu &#9662;</button>
             <div class="dropdown-content">
                 <a href="/">Home</a>
-                <a href="/forum">Forum</a>
-                <a href="/about">About</a>
-                <a href="/characters">Characters</a>
-                <a href="/search">Search</a>
-                <a href="/weather">Weather</a>
+                <a href="forum">Forum</a>
+                <a href="about">About</a>
+                <a href="characters">Characters</a>
+                <a href="search">Search</a>
+                <a href="weather">Weather</a>
             </div>
         </div>
     </nav>
 
-    <div class="thread-section">
-        <h2><%= thread.title %></h2>
-        <h4>Posted by: <%= thread.username %></h4>
-    </div>
-    <div class="thread-section">
-        <%= thread.content %>
+    <div class="container">
+        <h2>Enter City Name</h2>
+        <form action="/weather" method="post">
+            <input class="search-box" type="text" name="city" placeholder="Default" required>
+            <button type="submit">Submit</button>
+        </form>
+
+        <% if(weather) { %>
+        <h2>Weather in <%= weather.city %></h2>
+
+        <p>Weather Description: <%= weather.description %><br>
+            <%= weather.temperature %><br><br>
+            <%= weather.feels_like %><br><br>
+            <%= weather.temp_min %><br><br>
+            <%= weather.temp_max %><br><br>
+            <%= weather.pressure %><br><br>
+            <%= weather.humidity %><br><br>
+            <%= weather.wind %><br><br>
+            <%= weather.clouds %><br><br>
+            <%= weather.rain %></p>
+        <% } %>
+
+        <% if(error) { %>
+        <p><%= error %></p>
+        <% } %>
+
     </div>
 </body>
 

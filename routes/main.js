@@ -1,3 +1,4 @@
+const bcrypt = require('bcrypt');
 const {
     check,
     validationResult
@@ -12,9 +13,6 @@ module.exports = function(app, forumData) {
             next();
         }
     }
-
-    // import bcrypt for password hashing
-    const bcrypt = require('bcrypt');
 
     // render the index page
     app.get('/', function(req, res) {
@@ -93,7 +91,7 @@ module.exports = function(app, forumData) {
 
     // render the createThread page
     app.get('/createthread', redirectLogin, function(req, res) {
-        // Check if user is logged in
+        // check if user is logged in
         const userLoggedIn = req.session.userId ? true : false;
         const username = userLoggedIn ? req.session.userId : '';
 
@@ -166,7 +164,7 @@ module.exports = function(app, forumData) {
 
             // check if the user was found in the database
             if (result.length > 0) {
-                const userDbId = result[0].id; // get the user's ID from the database
+                const userDbId = result[0].id;
                 const storedUsername = result[0].username;
                 const hashedPassword = result[0].hashedPassword;
 
@@ -351,22 +349,155 @@ module.exports = function(app, forumData) {
 
     // search result
     app.get('/search-result', function(req, res) {
-        // search in the database
-        let sqlquery = "SELECT * FROM characters WHERE name LIKE '%" + req.query.keyword + "%'";
+        // get the search keyword from the query parameters
+        let keyword = req.query.keyword;
 
-        // execute the SQL query
-        db.query(sqlquery, (err, result) => {
+        // if the keyword is a single letter, search for names starting with that letter
+        if (keyword.length === 1) {
+            let sqlquery = "SELECT * FROM characters WHERE name LIKE '" + keyword + "%'";
+
+            // execute the SQL query
+            db.query(sqlquery, (err, result) => {
+                if (err) {
+                    res.redirect('./');
+                }
+
+                // pass the search results to search-result.ejs
+                res.render("characters.ejs", {
+                    forumName: forumData.forumName,
+                    userLoggedIn: req.session.userId ? true : false,
+                    username: req.session.userId || '',
+                    characters: result
+                });
+            });
+        } else {
+            let sqlquery = "SELECT * FROM characters WHERE name LIKE '%" + keyword + "%'";
+
+            // execute the SQL query
+            db.query(sqlquery, (err, result) => {
+                if (err) {
+                    res.redirect('./');
+                }
+
+                // pass the search results to search-result.ejs
+                res.render("characters.ejs", {
+                    forumName: forumData.forumName,
+                    userLoggedIn: req.session.userId ? true : false,
+                    username: req.session.userId || '',
+                    characters: result
+                });
+            });
+        }
+    });
+
+    // forum api
+    app.get('/api', function(req, res) {
+        let keyword = req.query.keyword;
+        let sqlQuery = "SELECT * FROM threads";
+        let queryParams = [];
+
+        if (keyword) {
+            sqlQuery += " WHERE title LIKE ? OR content LIKE ?";
+            keyword = '%' + keyword + '%';
+            queryParams = [keyword, keyword];
+        }
+
+        db.query(sqlQuery, queryParams, (err, result) => {
             if (err) {
-                res.redirect('./');
+                console.error('Error fetching posts:', err);
+                return res.status(500).json({
+                    error: 'Internal server error'
+                });
             }
 
-            // pass the search results to search-result.ejs
-            res.render("characters.ejs", {
-                forumName: forumData.forumName,
-                userLoggedIn: req.session.userId ? true : false,
-                username: req.session.userId || '',
-                characters: result
-            });
+            if (!result || result.length === 0) {
+                return res.status(404).json({
+                    error: 'No posts found'
+                });
+            }
+
+            res.json(result);
+        });
+    });
+
+    app.get('/weather', function(req, res) {
+        // check if user is logged in
+        const userLoggedIn = req.session.userId ? true : false;
+        const username = userLoggedIn ? req.session.userId : '';
+
+        res.render('weather.ejs', {
+            weather: null,
+            error: null,
+            forumName: forumData.forumName,
+            userLoggedIn: userLoggedIn,
+            username: username
+        });
+    });
+
+    app.post('/weather', function(req, res) {
+        const apiKey = 'ccb0fdc793b7a5f3b411408006c49d5d';
+        const city = req.body.city;
+        const url = `http://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${apiKey}`;
+
+        const request = require('request');
+
+        // check if user is logged in
+        const userLoggedIn = req.session.userId ? true : false;
+        const username = userLoggedIn ? req.session.userId : '';
+
+        request(url, function(err, response, body) {
+            if (err) {
+                res.render('weather.ejs', {
+                    weather: null,
+                    error: 'An error occurred; please attempt the action again.',
+                    forumName: forumData.forumName,
+                    userLoggedIn: userLoggedIn,
+                    username: username
+                });
+            } else {
+                try {
+                    const weather = JSON.parse(body);
+                    if (response.statusCode === 200 && weather.main) {
+                        const weatherMessage = {
+                            city: weather.name,
+                            description: weather.weather[0].description,
+                            temperature: `Temperature: ${weather.main.temp}°C`,
+                            feels_like: `Feels Like: ${weather.main.feels_like}°C`,
+                            temp_min: `Minimum Temperature: ${weather.main.temp_min}°C`,
+                            temp_max: `Maximum Temperature: ${weather.main.temp_max}°C`,
+                            pressure: `Pressure: ${weather.main.pressure} hPa`,
+                            humidity: `Humidity: ${weather.main.humidity}%`,
+                            wind: `Wind Speed: ${weather.wind.speed} m/s, Direction: ${weather.wind.deg}°`,
+                            clouds: `Cloudiness: ${weather.clouds.all}%`,
+                            rain: weather.rain ? `Rain: ${weather.rain['1h']} mm/h` : 'Rain: None',
+                        };
+                        res.render('weather.ejs', {
+                            weather: weatherMessage,
+                            error: null,
+                            forumName: forumData.forumName,
+                            userLoggedIn: userLoggedIn,
+                            username: username
+                        });
+                    } else {
+                        // handle errors
+                        res.render('weather.ejs', {
+                            weather: null,
+                            error: 'Unable to locate the weather for the city you specified.',
+                            forumName: forumData.forumName,
+                            userLoggedIn: userLoggedIn,
+                            username: username
+                        });
+                    }
+                } catch (parseError) {
+                    res.render('weather.ejs', {
+                        weather: null,
+                        error: 'There was a problem processing the weather information.',
+                        forumName: forumData.forumName,
+                        userLoggedIn: userLoggedIn,
+                        username: username
+                    });
+                }
+            }
         });
     });
 }
