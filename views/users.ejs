@@ -1,17 +1,18 @@
+</html>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Thread - <%= forumName %></title>
+    <title>Users - <%= forumName %></title>
     <link rel="stylesheet" type="text/css" href="/main.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="script.js"></script>
 </head>
 
 <body>
-    <h1>Create Thread</h1>
+    <h1>Users List</h1>
 
     <div class="auth-links">
         <!-- show welcome message and logout button if user is logged in -->
@@ -61,15 +62,9 @@
     </nav>
 
     <div class="container">
-        <form action="/createthread" method="post">
-            <label for="title">Thread Title:</label>
-            <input type="text" id="title" name="title" required>
-
-            <label for="content">Thread Content:</label>
-            <textarea id="content" name="content" required></textarea>
-
-            <button type="submit">Create Thread</button>
-        </form>
+        <p><% users.forEach(user => { %>
+            <%= user.username %> - <%= user.email %><br>
+            <% }); %> </p>
     </div>
 </body>
 

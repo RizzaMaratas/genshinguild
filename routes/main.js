@@ -419,6 +419,27 @@ module.exports = function(app, forumData) {
         }
     });
 
+    // fetch the list of users
+    app.get('/users', function(req, res) {
+        db.query('SELECT id, username, email FROM userDetails', (err, users) => {
+            if (err) {
+                console.error('Error fetching users from the database:', err);
+                return res.status(500).send('Internal Server Error');
+            }
+
+            // check if user is logged in
+            const userLoggedIn = req.session.userId ? true : false;
+            const username = userLoggedIn ? req.session.userId : '';
+
+            res.render('users.ejs', {
+                forumName: forumData.forumName,
+                users,
+                userLoggedIn,
+                username
+            });
+        });
+    });
+
     // forum api
     app.get('/api', function(req, res) {
         let keyword = req.query.keyword;
@@ -449,6 +470,7 @@ module.exports = function(app, forumData) {
         });
     });
 
+    // weather api
     app.get('/weather', function(req, res) {
         // check if user is logged in
         const userLoggedIn = req.session.userId ? true : false;
