@@ -113,7 +113,7 @@ module.exports = function(app, forumData) {
             return res.redirect('/login');
         }
 
-        // first, get the user_id from the userdetails table
+        // get the user_id from the userdetails table
         const userQuery = 'SELECT id FROM userdetails WHERE username = ?';
         db.query(userQuery, [username], (userErr, userResult) => {
             if (userErr) {
@@ -124,7 +124,7 @@ module.exports = function(app, forumData) {
             if (userResult.length > 0) {
                 const userId = userResult[0].id;
 
-                // now insert the new thread, including the user_id
+                // insert the new thread including the user_id
                 const sql = 'INSERT INTO threads (title, content, username, user_id) VALUES (?, ?, ?, ?)';
                 db.query(sql, [threadTitle, threadContent, username, userId], (threadErr, threadResult) => {
                     if (threadErr) {
@@ -144,7 +144,7 @@ module.exports = function(app, forumData) {
     // delete thread
     app.post('/delete-thread/:threadId', redirectLogin, function(req, res) {
         const threadId = req.params.threadId;
-        const userId = req.session.userDbId; // Assuming you store the user's database ID in the session
+        const userId = req.session.userDbId;
 
         // check if the user is the author of the thread
         db.query('SELECT user_id FROM threads WHERE id = ?', [threadId], (err, result) => {
@@ -158,14 +158,13 @@ module.exports = function(app, forumData) {
                 return res.status(403).send('You are not authorized to delete this thread.');
             }
 
-            // if the user is the author, delete the thread and its associated posts
+            // if the user is the author, delete the thread and its associated post
             db.query('DELETE FROM threads WHERE id = ?', [threadId], (deleteErr, deleteResult) => {
                 if (deleteErr) {
                     console.error('Error deleting thread from the database:', deleteErr);
                     return res.status(500).send('Internal Server Error');
                 }
                 res.redirect('/forum');
-                // });
             });
         });
     });
@@ -186,7 +185,7 @@ module.exports = function(app, forumData) {
         let sqlQuery = "SELECT id, username, hashedPassword FROM userDetails WHERE username = ?";
         db.query(sqlQuery, [username], (err, result) => {
             if (err) {
-                // handle other errors (e.g., database connection issues)
+                // handle errors
                 console.error(err);
                 return res.status(500).send("Error accessing the database. Please try again later.");
             }
@@ -197,7 +196,7 @@ module.exports = function(app, forumData) {
                 const storedUsername = result[0].username;
                 const hashedPassword = result[0].hashedPassword;
 
-                // compare the username and password supplied with the database values
+                // compare the username and password
                 if (username === storedUsername) {
                     bcrypt.compare(password, hashedPassword, function(err, result) {
                         if (err) {
@@ -212,7 +211,7 @@ module.exports = function(app, forumData) {
                             // redirect to the homepage
                             res.redirect('/');
                         } else {
-                            // passwords do not match, show error on login page
+                            // show error on login page if passwords do not match
                             res.render('login.ejs', {
                                 forumName: forumData.forumName,
                                 errorMessage: 'Incorrect username or password.'
@@ -220,14 +219,14 @@ module.exports = function(app, forumData) {
                         }
                     });
                 } else {
-                    // username does not match, show error on login page
+                    // show error on login page if username does not match
                     res.render('login.ejs', {
                         forumName: forumData.forumName,
                         errorMessage: 'Incorrect username or password.'
                     });
                 }
             } else {
-                // user not found in the database, show error on login page
+                // show error on login page if user is not found in the database
                 res.render('login.ejs', {
                     forumName: forumData.forumName,
                     errorMessage: 'User not found.'
@@ -236,6 +235,7 @@ module.exports = function(app, forumData) {
         });
     });
 
+    // logout route
     app.get('/logout', (req, res) => {
         req.session.destroy(err => {
             if (err) {
@@ -367,7 +367,7 @@ module.exports = function(app, forumData) {
         });
     });
 
-    // search
+    // search route
     app.get('/search', function(req, res) {
         res.render("search.ejs", {
             forumName: forumData.forumName,
@@ -435,7 +435,8 @@ module.exports = function(app, forumData) {
                 forumName: forumData.forumName,
                 users,
                 userLoggedIn,
-                username
+                username,
+                session: req.session
             });
         });
     });
@@ -549,6 +550,27 @@ module.exports = function(app, forumData) {
                     });
                 }
             }
+        });
+    });
+
+    // deleting a user route
+    app.post('/delete-account', redirectLogin, function(req, res) {
+        const userId = req.session.userDbId;
+
+        // delete the user's account based on their ID
+        db.query('DELETE FROM userDetails WHERE id = ?', [userId], (err, result) => {
+            if (err) {
+                console.error('Error deleting user account from the database:', err);
+                return res.status(500).send('Internal Server Error');
+            }
+
+            // destroy the user's session and redirect to the homepage
+            req.session.destroy(err => {
+                if (err) {
+                    console.error(err);
+                }
+                res.redirect('/');
+            });
         });
     });
 }

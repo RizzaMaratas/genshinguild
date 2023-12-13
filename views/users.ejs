@@ -65,6 +65,13 @@
         <p><% users.forEach(user => { %>
             <%= user.username %> - <%= user.email %><br>
             <% }); %> </p>
+
+        <!-- delete user button -->
+        <% if (userLoggedIn && username === session.userId) { %>
+        <form action="/delete-account" method="POST">
+            <button type="submit" onclick="return confirm('Are you sure you want to delete your account? Clicking OK will delete your account instantly and log you out.')">Delete Account</button>
+        </form>
+        <% } %>
     </div>
 </body>
 
