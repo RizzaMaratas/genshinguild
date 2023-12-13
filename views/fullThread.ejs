@@ -61,6 +61,14 @@
     <div class="thread-section">
         <%= thread.content %>
     </div>
+
+    <!-- display the delete button with a confirmation dialog -->
+    <% if (userLoggedIn && username === thread.username) { %>
+    <form action="/delete-thread/<%= thread.id %>" method="POST" onsubmit="return confirm('Are you sure you want to delete this post?');">
+    <button type="submit">Delete Post</button>
+    </form>
+    <% } %>
+
 </body>
 
 </html>

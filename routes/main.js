@@ -141,6 +141,35 @@ module.exports = function(app, forumData) {
         });
     });
 
+    // delete thread
+    app.post('/delete-thread/:threadId', redirectLogin, function(req, res) {
+        const threadId = req.params.threadId;
+        const userId = req.session.userDbId; // Assuming you store the user's database ID in the session
+
+        // check if the user is the author of the thread
+        db.query('SELECT user_id FROM threads WHERE id = ?', [threadId], (err, result) => {
+            if (err) {
+                console.error('Error fetching thread from the database:', err);
+                return res.status(500).send('Internal Server Error');
+            }
+
+            if (result.length === 0 || result[0].user_id !== userId) {
+                // show message if the user is not the author
+                return res.status(403).send('You are not authorized to delete this thread.');
+            }
+
+            // if the user is the author, delete the thread and its associated posts
+            db.query('DELETE FROM threads WHERE id = ?', [threadId], (deleteErr, deleteResult) => {
+                if (deleteErr) {
+                    console.error('Error deleting thread from the database:', deleteErr);
+                    return res.status(500).send('Internal Server Error');
+                }
+                res.redirect('/forum');
+                // });
+            });
+        });
+    });
+
     // render the login page
     app.get('/login', function(req, res) {
         res.render('login.ejs', {
