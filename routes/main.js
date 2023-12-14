@@ -107,8 +107,9 @@ module.exports = function(app, forumData) {
         const threadTitle = req.sanitize(req.body.title);
         const threadContent = req.sanitize(req.body.content);
         const username = req.session.userId;
+        const selectedTag = req.body.tag;
 
-        // make sure the user is logged in before allowing them to create a thread
+        // check if user is logged in before allowing them to create a thread
         if (!username) {
             return res.redirect('/login');
         }
@@ -124,9 +125,9 @@ module.exports = function(app, forumData) {
             if (userResult.length > 0) {
                 const userId = userResult[0].id;
 
-                // insert the new thread including the user_id
-                const sql = 'INSERT INTO threads (title, content, username, user_id) VALUES (?, ?, ?, ?)';
-                db.query(sql, [threadTitle, threadContent, username, userId], (threadErr, threadResult) => {
+                // insert the new thread including the user_id and selected tag
+                const sql = 'INSERT INTO threads (title, content, username, user_id, tag) VALUES (?, ?, ?, ?, ?)';
+                db.query(sql, [threadTitle, threadContent, username, userId, selectedTag], (threadErr, threadResult) => {
                     if (threadErr) {
                         console.error('Error saving thread to the database:', threadErr);
                         return res.redirect('/createthread');
@@ -681,6 +682,31 @@ module.exports = function(app, forumData) {
                 forumName: forumData.forumName,
                 userLoggedIn: userLoggedIn,
                 username: username
+            });
+        });
+    });
+
+    // render a page showing all posts with a specific tag
+    app.get('/tag/:tag', function(req, res) {
+        const tag = req.params.tag;
+
+        // fetch all threads with the same tag from the database
+        db.query('SELECT id, title, content, username FROM threads WHERE tag = ?', [tag], (err, threads) => {
+            if (err) {
+                console.error('Error fetching threads by tag from the database:', err);
+                return res.status(500).send('Internal Server Error');
+            }
+
+            // check if user is logged in
+            const userLoggedIn = req.session.userId ? true : false;
+            const username = userLoggedIn ? req.session.userId : '';
+
+            res.render('tagPage.ejs', {
+                forumName: forumData.forumName,
+                tag,
+                threads,
+                userLoggedIn,
+                username
             });
         });
     });

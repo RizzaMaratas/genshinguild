@@ -4,14 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= thread.title %> - <%=forumName%></title>
+    <title>Forum - <%=forumName%></title>
     <link rel="stylesheet" type="text/css" href="/main.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="script.js"></script>
 </head>
 
 <body>
-    <h1><%=forumName%></h1>
+    <h1>Forum</h1>
 
     <div class="auth-links">
         <!-- show welcome message and logout button if user is logged in -->
@@ -46,6 +46,7 @@
                 <a href="/">Home</a>
                 <a href="/forum">Forum</a>
                 <a href="/about">About</a>
+                <a href="/createthread">Create Post</a>
                 <a href="/characters">Characters</a>
                 <a href="/users">Users</a>
                 <a href="/search">Search</a>
@@ -62,22 +63,21 @@
         <a href="/api">Api</a>
     </nav>
 
-    <div class="thread-section">
-        <h2><%= thread.title %></h2>
-        <h4>Posted by: <%= thread.username %></h4>
-    </div>
-    <div class="thread-section">
-        <h4 class="tag-heading"><strong>Tag: <a href="/tag/<%= thread.tag %>"><%= thread.tag %></a></strong></h4>
-        <%= thread.content %>
-    </div>
-
-    <!-- display the delete button with a confirmation dialog -->
-    <% if (userLoggedIn && username === thread.username) { %>
-    <form action="/delete-thread/<%= thread.id %>" method="POST" onsubmit="return confirm('Are you sure you want to delete this post?');">
-        <button type="submit">Delete Post</button>
-    </form>
+    <h2>Tag: <%= tag %></h2>
+    <!-- display the list of threads with the same tag -->
+    <% if (threads.length > 0) { %>
+    <ul>
+        <% threads.forEach(function(thread) { %>
+        <li>
+            <h3>Title: <a href="/forum/<%= thread.id %>"><%= thread.title %></a>
+            <p>Posted by: <%= thread.username %></p>
+        </h3>
+        </li>
+        <% }); %>
+    </ul>
+    <% } else { %>
+    <p>No threads found with this tag.</p>
     <% } %>
-
 </body>
 
 </html>

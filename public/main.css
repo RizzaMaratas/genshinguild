@@ -91,6 +91,24 @@ ul p {
     text-align: center;
 }
 
+.tag-heading a {
+    text-decoration: none;
+    color: var(--selectionColor);
+    background-color: var(--colorOne);
+    border-radius: 0.5rem;
+}
+
+.tag-heading a:hover {
+    color: var(--colorTwo);
+}
+
+#tag {
+    border-radius: 1rem;
+    padding: 5px;
+    outline: none;
+    padding: 5px 15px;
+}
+
 /* navigation */
 .navigation {
     display: flex;
@@ -117,8 +135,8 @@ a:link,
 a:visited {
     color: var(--colorThree);
     font-weight: bold;
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
     text-decoration: none;
 }
 
@@ -167,6 +185,7 @@ form button {
     font-size: 1.2rem;
     height: 2rem;
     width: 100%;
+    padding: 4px 20px;
 }
 
 form button:hover {

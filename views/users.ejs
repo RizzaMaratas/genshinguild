@@ -71,7 +71,7 @@
         <!-- delete user button -->
         <% if (userLoggedIn && username === session.userId) { %>
         <form action="/delete-account" method="POST">
-            <button type="submit" onclick="return confirm('Are you sure you want to delete your account? Clicking OK will delete your account instantly and log you out.')">Delete Account</button>
+            <button type="submit" onclick="return confirm('Are you sure you want to delete your account? Clicking OK will delete your account instantly and log you out.')">Delete My Account</button>
         </form>
         <% } %>
     </div>

@@ -55,3 +55,5 @@ VALUES
     ('Razor', '4 Star', 'Electro', 'Claymore', 'Mondstadt'),
     ('Sucrose', '4 Star', 'Anemo', 'Catalyst', 'Mondstadt'),
     ('Traveler', '5 Star', 'None', 'Sword', 'None');
+
+ALTER TABLE threads ADD COLUMN tag VARCHAR(255);
