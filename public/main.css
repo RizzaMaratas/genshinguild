@@ -145,6 +145,16 @@ a:hover {
     transition: 0.4s ease-out;
 }
 
+a.centered-link {
+    display: block;
+    text-align: center;
+    background-color: #B4846C;
+}
+
+a.centered-link:hover {
+    color: #faf2ea;
+}
+
 /* form */
 form {
     margin: 30px 0;
