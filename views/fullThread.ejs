@@ -87,10 +87,10 @@
 
     <div class="button-container">
         <form action="/forum/<%= thread.id %>/thumbsUp" method="POST">
-            <button type="submit">Thumbs up (<%= thread.thumbs_up %>)</button>
+            <button type="submit">Upvote (<%= thread.thumbs_up %>)</button>
         </form>
         <form action="/forum/<%= thread.id %>/thumbsDown" method="POST">
-            <button type="submit">Thumbs down (<%= thread.thumbs_down %>)</button>
+            <button type="submit">Downvote (<%= thread.thumbs_down %>)</button>
         </form>
     </div>
 </body>
