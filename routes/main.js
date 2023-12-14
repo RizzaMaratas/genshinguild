@@ -64,7 +64,7 @@ module.exports = function(app, forumData) {
         const threadId = req.params.threadId;
 
         // fetch the selected thread from the database
-        db.query('SELECT * FROM threads WHERE id = ?', [threadId], (err, selectedThread) => {
+        db.query('SELECT *, thumbs_up, thumbs_down FROM threads WHERE id = ?', [threadId], (err, selectedThread) => {
             if (err) {
                 console.error('Error fetching thread from the database:', err);
                 return res.status(500).send('Internal Server Error');
@@ -763,6 +763,80 @@ module.exports = function(app, forumData) {
                 threads,
                 userLoggedIn,
                 username
+            });
+        });
+    });
+
+    // post thumbs up
+    app.post('/forum/:threadId/thumbsUp', redirectLogin, (req, res) => {
+        const threadId = req.params.threadId;
+        const userId = req.session.userDbId;
+
+        // check if the user has already voted (up or down) for this thread
+        db.query('SELECT * FROM user_votes WHERE user_id = ? AND thread_id = ?', [userId, threadId], (err, results) => {
+            if (err) {
+                console.error('Error checking user vote:', err);
+                return res.status(500).send('Internal Server Error');
+            }
+
+            if (results.length > 0) {
+                // user has already voted, don't allow another vote
+                return res.status(400).send('You have already voted for this thread.');
+            }
+
+            // if the user hasn't voted before, increment the thumbs up count in the database
+            db.query('UPDATE threads SET thumbs_up = thumbs_up + 1 WHERE id = ?', [threadId], (err) => {
+                if (err) {
+                    console.error('Error updating thumbs up count:', err);
+                    return res.status(500).send('Internal Server Error');
+                }
+
+                // record the user's upvote in the user_votes table
+                db.query('INSERT INTO user_votes (user_id, thread_id, vote_type) VALUES (?, ?, ?)', [userId, threadId, 'up'], (err) => {
+                    if (err) {
+                        console.error('Error recording user vote:', err);
+                        return res.status(500).send('Internal Server Error');
+                    }
+
+                    res.redirect('/forum/' + threadId);
+                });
+            });
+        });
+    });
+
+    // post thumbs down
+    app.post('/forum/:threadId/thumbsDown', redirectLogin, (req, res) => {
+        const threadId = req.params.threadId;
+        const userId = req.session.userDbId;
+
+        // check if the user has already voted (up or down) for this thread
+        db.query('SELECT * FROM user_votes WHERE user_id = ? AND thread_id = ?', [userId, threadId], (err, results) => {
+            if (err) {
+                console.error('Error checking user vote:', err);
+                return res.status(500).send('Internal Server Error');
+            }
+
+            if (results.length > 0) {
+                // user has already voted, don't allow another vote
+                return res.status(400).send('You have already voted for this thread.');
+            }
+
+            // if the user hasn't voted before, increment the thumbs down count in the database
+            db.query('UPDATE threads SET thumbs_down = thumbs_down + 1 WHERE id = ?', [threadId], (err) => {
+                if (err) {
+                    console.error('Error updating thumbs down count:', err);
+                    return res.status(500).send('Internal Server Error');
+                }
+
+                // record the user's downvote in the user_votes table
+                db.query('INSERT INTO user_votes (user_id, thread_id, vote_type) VALUES (?, ?, ?)', [userId, threadId, 'down'], (err) => {
+                    if (err) {
+                        console.error('Error recording user vote:', err);
+                        return res.status(500).send('Internal Server Error');
+                    }
+
+                    res.redirect('/forum/' + threadId);
+                });
             });
         });
     });
