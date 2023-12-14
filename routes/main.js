@@ -114,7 +114,7 @@ module.exports = function(app, forumData) {
         }
 
         // get the user_id from the userdetails table
-        const userQuery = 'SELECT id FROM userdetails WHERE username = ?';
+        const userQuery = 'SELECT id FROM userDetails WHERE username = ?';
         db.query(userQuery, [username], (userErr, userResult) => {
             if (userErr) {
                 console.error('Error finding user in the database:', userErr);
