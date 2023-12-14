@@ -1,8 +1,4 @@
-const bcrypt = require('bcrypt');
-const {
-    check,
-    validationResult
-} = require('express-validator');
+const {check, validationResult} = require('express-validator');
 
 module.exports = function(app, forumData) {
     // redirect to login if user is not authenticated
@@ -13,6 +9,9 @@ module.exports = function(app, forumData) {
             next();
         }
     }
+
+    // import bcrypt for password hashing
+    const bcrypt = require('bcrypt');
 
     // render the index page
     app.get('/', function(req, res) {
@@ -477,7 +476,7 @@ module.exports = function(app, forumData) {
     });
 
     // fetch the list of users
-    app.get('/users', function(req, res) {
+    app.get('/users', redirectLogin, function(req, res) {
         db.query('SELECT id, username, email FROM userDetails', (err, users) => {
             if (err) {
                 console.error('Error fetching users from the database:', err);

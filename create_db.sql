@@ -1,7 +1,5 @@
 CREATE DATABASE myForum;
 USE myForum;
-ALTER USER `appuser`@`localhost` IDENTIFIED WITH mysql_native_password BY `app2023`;
-GRANT ALL PRIVILEGES ON myForum.* TO `appuser`@`localhost`;
 
 CREATE TABLE `userdetails` (
   `id` int NOT NULL AUTO_INCREMENT,
@@ -11,8 +9,7 @@ CREATE TABLE `userdetails` (
   `email` varchar(255) NOT NULL,
   `hashedPassword` varchar(255) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `username` (`username`)
-);
+  UNIQUE KEY `username` (`username`));
 
 CREATE TABLE `threads` (
   `id` int NOT NULL AUTO_INCREMENT,
@@ -22,8 +19,7 @@ CREATE TABLE `threads` (
   `user_id` int DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_user_id` (`user_id`),
-  CONSTRAINT `fk_user_id` FOREIGN KEY (`user_id`) REFERENCES `userdetails` (`id`) ON DELETE CASCADE
-);
+  CONSTRAINT `fk_user_id` FOREIGN KEY (`user_id`) REFERENCES `userdetails` (`id`) ON DELETE CASCADE);
 
 CREATE TABLE `characters` (
     `character_id` INT PRIMARY KEY AUTO_INCREMENT,
@@ -31,8 +27,7 @@ CREATE TABLE `characters` (
     `quality` VARCHAR(50),
     `element` VARCHAR(50),
     `weapon` VARCHAR(50),
-    `region` VARCHAR(50)
-);
+    `region` VARCHAR(50));
 
 INSERT INTO `characters` (`name`, `quality`, `element`, `weapon`, `region`) VALUES
 ('Amber', '4 Star', 'Pyro', 'Bow', 'Mondstadt'),
@@ -68,5 +63,7 @@ CREATE TABLE `user_votes` (
   PRIMARY KEY (`id`),
   UNIQUE KEY unique_vote (`user_id`, `thread_id`, `vote_type`),
   FOREIGN KEY (`user_id`) REFERENCES `userdetails`(`id`) ON DELETE CASCADE,
-  FOREIGN KEY (`thread_id`) REFERENCES `threads`(`id`) ON DELETE CASCADE
-);
+  FOREIGN KEY (`thread_id`) REFERENCES `threads`(`id`) ON DELETE CASCADE);
+
+ALTER USER 'appuser'@'localhost' IDENTIFIED WITH mysql_native_password BY 'app2023';
+GRANT ALL PRIVILEGES ON myForum.* TO 'appuser'@'localhost';
