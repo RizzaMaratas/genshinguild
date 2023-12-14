@@ -476,7 +476,7 @@ module.exports = function(app, forumData) {
     });
 
     // fetch the list of users
-    app.get('/users', function(req, res) {
+    app.get('/users', redirectLogin, function(req, res) {
         db.query('SELECT id, username, email FROM userDetails', (err, users) => {
             if (err) {
                 console.error('Error fetching users from the database:', err);

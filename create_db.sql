@@ -1,7 +1,7 @@
 CREATE DATABASE myForum;
 USE myForum;
 
-CREATE TABLE `userdetails` (
+CREATE TABLE `userDetails` (
   `id` int NOT NULL AUTO_INCREMENT,
   `username` varchar(255) NOT NULL,
   `first` varchar(255) NOT NULL,
@@ -19,7 +19,7 @@ CREATE TABLE `threads` (
   `user_id` int DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_user_id` (`user_id`),
-  CONSTRAINT `fk_user_id` FOREIGN KEY (`user_id`) REFERENCES `userdetails` (`id`) ON DELETE CASCADE);
+  CONSTRAINT `fk_user_id` FOREIGN KEY (`user_id`) REFERENCES `userDetails` (`id`) ON DELETE CASCADE);
 
 CREATE TABLE `characters` (
     `character_id` INT PRIMARY KEY AUTO_INCREMENT,
@@ -62,7 +62,7 @@ CREATE TABLE `user_votes` (
   `vote_type` varchar(255) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY unique_vote (`user_id`, `thread_id`, `vote_type`),
-  FOREIGN KEY (`user_id`) REFERENCES `userdetails`(`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`user_id`) REFERENCES `userDetails`(`id`) ON DELETE CASCADE,
   FOREIGN KEY (`thread_id`) REFERENCES `threads`(`id`) ON DELETE CASCADE);
 
 ALTER USER 'appuser'@'localhost' IDENTIFIED WITH mysql_native_password BY 'app2023';
