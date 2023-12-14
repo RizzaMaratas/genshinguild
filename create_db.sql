@@ -57,3 +57,4 @@ VALUES
     ('Traveler', '5 Star', 'None', 'Sword', 'None');
 
 ALTER TABLE threads ADD COLUMN tag VARCHAR(255);
+ALTER TABLE threads ADD COLUMN edited BOOLEAN DEFAULT false;

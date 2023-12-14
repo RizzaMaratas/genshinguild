@@ -170,6 +170,62 @@ module.exports = function(app, forumData) {
         });
     });
 
+    // edit thread
+    app.get('/edit-thread/:threadId', redirectLogin, function(req, res) {
+        const threadId = req.params.threadId;
+        const username = req.session.userId;
+
+        // check if the user is logged in and set userLoggedIn accordingly
+        const userLoggedIn = req.session.userId ? true : false;
+
+        // fetch the selected thread from the database
+        db.query('SELECT * FROM threads WHERE id = ? AND username = ?', [threadId, username], (err, selectedThread) => {
+            if (err) {
+                console.error('Error fetching thread from the database:', err);
+                return res.status(500).send('Internal Server Error');
+            }
+
+            if (selectedThread.length === 0) {
+                return res.status(404).send('Thread not found or you are not authorized to edit this thread.');
+            }
+
+            // render the editThread.ejs with forum name, the selected thread, and userLoggedIn
+            res.render('editThread.ejs', {
+                forumName: forumData.forumName,
+                thread: selectedThread[0],
+                userLoggedIn: userLoggedIn,
+                username: username
+            });
+        });
+    });
+
+    app.post('/edit-thread/:threadId', redirectLogin, function(req, res) {
+        const threadId = req.params.threadId;
+        const username = req.session.userId;
+        const updatedTitle = req.sanitize(req.body.title);
+        const updatedContent = req.sanitize(req.body.content);
+        const updatedTag = req.body.tag;
+        const edited = true;
+
+        // update the thread in the database if the user is the author
+        db.query('UPDATE threads SET title = ?, content = ?, tag = ?, edited = ? WHERE id = ? AND username = ?',
+            [updatedTitle, updatedContent, updatedTag, edited, threadId, username],
+            (err, result) => {
+                if (err) {
+                    console.error('Error updating thread in the database:', err);
+                    return res.status(500).send('Internal Server Error');
+                }
+
+                if (result.affectedRows === 0) {
+                    return res.status(404).send('Thread not found or you are not authorized to edit this thread.');
+                }
+
+                // redirect to the fullThread page after successfully editing the thread
+                res.redirect('/forum/' + threadId);
+            }
+        );
+    });
+
     // render the login page
     app.get('/login', function(req, res) {
         res.render('login.ejs', {

@@ -4,14 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= thread.title %> - <%=forumName%></title>
+    <title>Full Post - <%=forumName%></title>
     <link rel="stylesheet" type="text/css" href="/main.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="script.js"></script>
 </head>
 
 <body>
-    <h1><%=forumName%></h1>
+    <h1>Full Post</h1>
 
     <div class="auth-links">
         <!-- show welcome message and logout button if user is logged in -->
@@ -67,15 +67,22 @@
         <h4>Posted by: <%= thread.username %></h4>
     </div>
     <div class="thread-section">
-        <h4 class="tag-heading"><strong>Tag: <a href="/tag/<%= thread.tag %>"><%= thread.tag %></a></strong></h4>
+        <h4 class="tag-heading"><strong>Tag: <a href="/tag/<%= thread.tag %>"><%= thread.tag %></a></strong>
+        <br><br><% if (thread.edited) { %> (post was edited) <% } %>
+        </h4>
         <%= thread.content %>
     </div>
 
-    <!-- display the delete button with a confirmation dialog -->
+    <!-- display the edit button and a delete button with a confirmation dialog -->
     <% if (userLoggedIn && username === thread.username) { %>
-    <form action="/delete-thread/<%= thread.id %>" method="POST" onsubmit="return confirm('Are you sure you want to delete this post?');">
-        <button type="submit">Delete Post</button>
-    </form>
+    <div class="button-container">
+        <form action="/edit-thread/<%= thread.id %>" method="GET">
+            <button type="submit" class="resize-button">Edit Post</button>
+        </form>
+        <form action="/delete-thread/<%= thread.id %>" method="POST" onsubmit="return confirm('Are you sure you want to delete this post?');">
+            <button type="submit" class="resize-button">Delete Post</button>
+        </form>
+    </div>
     <% } %>
 
 </body>
